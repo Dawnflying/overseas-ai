@@ -5,6 +5,30 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+# Archive (deprecated files)
+.archive/
+
+# Assets - ignore large files and originals
+assets/**/*.psd
+assets/**/*.sketch
+assets/**/*.fig
+assets/**/*.ai
+assets/**/*.xd
+assets/**/*.tmp
+assets/**/*.bak
+assets/videos/*.mp4
+assets/videos/*.mov
+assets/videos/*.avi
+assets/docs/*.pdf
+assets/docs/*.ppt*
+assets/docs/*.doc*
+# Keep small images and screenshots
+!assets/screenshots/*.png
+!assets/screenshots/*.jpg
+!assets/images/*.png
+!assets/images/*.jpg
+!assets/images/*.svg
+
 # Environment variables
 .env
 .env.*

@@ -60,9 +60,35 @@ const config = {
     }
   },
 
-  // 数据库配置（未来扩展）
+  // MySQL数据库配置
   database: {
-    // 这里可以添加数据库连接配置
+    mysql: {
+      host: process.env.MYSQL_HOST || 'rm-uf625c9d22j18o6579o.mysql.rds.aliyuncs.com',
+      port: process.env.MYSQL_PORT || 3306,
+      database: process.env.MYSQL_DATABASE || 'overseas-ai',
+      username: process.env.MYSQL_USERNAME || 'overseas-ai',
+      password: process.env.MYSQL_PASSWORD || 'jarvis@888',
+      dialect: 'mysql',
+      pool: {
+        max: 10,
+        min: 0,
+        acquire: 30000,
+        idle: 10000
+      },
+      logging: process.env.NODE_ENV === 'development' ? console.log : false,
+      define: {
+        timestamps: true,
+        underscored: false,
+        freezeTableName: true
+      }
+    }
+  },
+
+  // Elasticsearch配置（保留用于向量搜索）
+  elasticsearch: {
+    url: process.env.ELASTICSEARCH_URL || 'http://localhost:9200',
+    indexPrefix: process.env.ELASTICSEARCH_INDEX_PREFIX || 'overseas_',
+    vectorDimension: parseInt(process.env.VECTOR_DIMENSION) || 768
   },
 
   // 日志配置

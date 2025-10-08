@@ -214,7 +214,7 @@ const AISidebar = ({ isOpen, onClose }) => {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .ai-sidebar {
           position: fixed;
           top: 80px;

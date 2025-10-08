@@ -16,6 +16,30 @@
 
 ---
 
+## 📸 界面预览 | Screenshots
+
+<div align="center">
+
+### 🏠 首页 | Home Page
+![首页](./assets/screenshots/home-hero.png)
+*智能化的出海电商平台首页*
+
+### 📊 智能仪表盘 | AI Dashboard
+![仪表盘](./assets/screenshots/dashboard-overview.png)
+*数据驱动的决策支持系统*
+
+### 🎯 规划向导 | Planning Wizard
+![规划向导](./assets/screenshots/planning-wizard.png)
+*AI 驱动的出海规划助手*
+
+### 📈 市场分析 | Market Analysis
+![市场分析](./assets/screenshots/market-analysis.png)
+*实时市场数据分析和洞察*
+
+</div>
+
+---
+
 ## English
 
 ### 🚀 Overview

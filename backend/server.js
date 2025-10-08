@@ -15,6 +15,7 @@ const multer = require('multer');
 const config = require('./config');
 const { globalErrorHandler, handleUncaughtException, handleUnhandledRejection, notFoundHandler } = require('./middleware/errorHandler');
 const { validateFileUpload } = require('./middleware/validation');
+const { testConnection } = require('./config/database');
 
 // 导入路由
 const routes = require('./routes');
@@ -60,6 +61,16 @@ app.use(express.urlencoded({ extended: true }));
 const limiter = rateLimit(config.rateLimit);
 app.use(limiter);
 
+// 健康检查端点
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'healthy',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    memory: process.memoryUsage()
+  });
+});
+
 // 注册路由
 app.use('/api', routes);
 
@@ -93,13 +104,37 @@ app.use(globalErrorHandler);
 
 // 启动服务器
 const PORT = config.server.port;
-app.listen(PORT, () => {
-  console.log(`🚀 出海AI后端服务运行在端口 ${PORT}`);
-  console.log(`📊 健康检查: http://localhost:${PORT}/health`);
-  console.log(`🤖 AI聊天API: http://localhost:${PORT}/ai/chat`);
-  console.log(`📋 规划API: http://localhost:${PORT}/api/planning`);
-  console.log(`🔧 工具API: http://localhost:${PORT}/api/tools`);
-  console.log(`🔐 认证API: http://localhost:${PORT}/api/auth`);
-});
+
+// 初始化数据库连接
+async function startServer() {
+  try {
+    // 测试数据库连接
+    console.log('🔗 正在连接数据库...');
+    const dbConnected = await testConnection();
+    
+    if (!dbConnected) {
+      console.error('❌ 数据库连接失败，服务器启动终止');
+      process.exit(1);
+    }
+
+    // 启动HTTP服务器
+    app.listen(PORT, () => {
+      console.log(`🚀 出海AI后端服务运行在端口 ${PORT}`);
+      console.log(`📊 健康检查: http://localhost:${PORT}/health`);
+      console.log(`🤖 AI聊天API: http://localhost:${PORT}/ai/chat`);
+      console.log(`📋 规划API: http://localhost:${PORT}/api/planning`);
+      console.log(`🔧 工具API: http://localhost:${PORT}/api/tools`);
+      console.log(`🔐 认证API: http://localhost:${PORT}/api/auth`);
+      console.log(`📚 知识库API: http://localhost:${PORT}/api/knowledge`);
+      console.log(`💾 数据库: MySQL (${config.database.mysql.host})`);
+    });
+  } catch (error) {
+    console.error('❌ 服务器启动失败:', error.message);
+    process.exit(1);
+  }
+}
+
+// 启动服务器
+startServer();
 
 module.exports = app;

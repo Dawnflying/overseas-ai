@@ -625,7 +625,7 @@ const Community = () => {
         />
       )}
 
-      <style jsx>{`
+      <style>{`
         .community {
           min-height: 100vh;
           background: #f8fafc;

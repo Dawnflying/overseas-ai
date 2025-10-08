@@ -1,0 +1,42 @@
+# Kibana 配置文件
+
+# 服务器配置
+server.name: "kibana"
+server.host: "0.0.0.0"
+server.port: 5601
+
+# Elasticsearch 连接配置
+elasticsearch.hosts: ["http://elasticsearch:9200"]
+
+# 安全配置（开发环境）
+xpack.security.enabled: false
+xpack.encryptedSavedObjects.encryptionKey: "something_at_least_32_characters_long_for_encryption"
+
+# 日志配置
+logging:
+  appenders:
+    console:
+      type: console
+      layout:
+        type: json
+  root:
+    appenders: [console]
+    level: info
+  loggers:
+    - name: plugins.elasticsearch
+      level: warn
+    - name: plugins.kibana
+      level: warn
+
+# 性能配置
+server.maxPayload: 1048576
+elasticsearch.requestTimeout: 30000
+elasticsearch.shardTimeout: 30000
+
+# 国际化配置
+i18n.locale: "zh-CN"
+
+# 功能配置
+xpack.reporting.enabled: false
+telemetry.enabled: false
+

@@ -93,7 +93,7 @@ const FeaturesSection = () => {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .features-section {
           padding: 4rem 0;
           background: white;

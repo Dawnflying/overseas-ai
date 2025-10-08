@@ -1,5 +1,5 @@
 # 后端Docker镜像
-FROM node:18-alpine
+FROM --platform=linux/amd64 node:18-alpine
 
 # 设置工作目录
 WORKDIR /app

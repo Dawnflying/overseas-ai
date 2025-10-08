@@ -114,7 +114,7 @@ const Header = ({ currentPage, onNavigate, user, onLogout, onShowLogin }) => {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .header {
           position: fixed;
           top: 0;

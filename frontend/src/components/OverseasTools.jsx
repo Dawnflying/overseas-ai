@@ -669,7 +669,7 @@ const OverseasTools = () => {
         </div>
       )}
 
-      <style jsx>{`
+      <style>{`
         .overseas-tools {
           min-height: 100vh;
           background: #f8fafc;

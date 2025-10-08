@@ -475,7 +475,7 @@ const TikTokShopManager = () => {
         />
       )}
 
-      <style jsx>{`
+      <style>{`
         .tiktok-shop-manager {
           min-height: 100vh;
           background: #f8fafc;
@@ -986,7 +986,7 @@ const TikTokAuthModal = ({ onClose, onAuth, supportedSites, shopTypes }) => {
           </div>
         </form>
 
-        <style jsx>{`
+        <style>{`
           .auth-modal-overlay {
             position: fixed;
             top: 0;
@@ -1235,7 +1235,7 @@ const ShopDetailModal = ({ shop, onClose, onUpdate }) => {
           </button>
         </div>
 
-        <style jsx>{`
+        <style>{`
           .detail-modal-overlay {
             position: fixed;
             top: 0;

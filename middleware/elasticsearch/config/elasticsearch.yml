@@ -1,0 +1,47 @@
+# Elasticsearch 配置文件
+
+# 集群配置
+cluster.name: overseas-ai-cluster
+node.name: elasticsearch-master
+node.roles: 
+  - master
+  - data
+  - ingest
+
+# 网络配置
+network.host: 0.0.0.0
+http.port: 9200
+transport.port: 9300
+
+# 发现配置
+discovery.type: single-node
+
+# 安全配置（开发环境）
+xpack.security.enabled: false
+xpack.security.enrollment.enabled: false
+xpack.security.http.ssl.enabled: false
+xpack.security.transport.ssl.enabled: false
+
+# 向量检索配置
+indices.query.knn: true
+
+# 内存和性能优化
+bootstrap.memory_lock: true
+cluster.routing.allocation.disk.threshold_enabled: false
+
+# 索引设置
+action.auto_create_index: true
+index.number_of_shards: 1
+index.number_of_replicas: 0
+
+# 日志配置
+logger.level: INFO
+logger.level.org.elasticsearch.cluster.service: WARN
+
+# 插件配置
+plugins.security.disabled: true
+
+# 路径配置
+path.data: /usr/share/elasticsearch/data
+path.logs: /usr/share/elasticsearch/logs
+

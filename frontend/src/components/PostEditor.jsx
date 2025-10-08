@@ -568,7 +568,7 @@ const PostEditor = ({ onClose, onSave, initialPost = null }) => {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .post-editor-overlay {
           position: fixed;
           top: 0;

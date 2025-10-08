@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom'
 import Header from './components/Header'
 import HeroSection from './components/HeroSection'
 import FeaturesSection from './components/FeaturesSection'
@@ -15,14 +16,15 @@ import DashboardPage from './components/DashboardPage'
 import Footer from './components/Footer'
 import './App.css'
 
-function App() {
-  const [currentPage, setCurrentPage] = useState('home')
+// 主应用组件，包含路由逻辑
+function AppContent() {
   const [isAIAssistantOpen, setIsAIAssistantOpen] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [showLoginModal, setShowLoginModal] = useState(false)
-  const [showLoginPage, setShowLoginPage] = useState(false)
   const [user, setUser] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
+  const navigate = useNavigate()
+  const location = useLocation()
 
   // 检查登录状态
   useEffect(() => {
@@ -73,22 +75,41 @@ function App() {
   const handleNavigation = (page) => {
     // 检查是否需要登录
     if (page === 'dashboard' && !isLoggedIn) {
-      setShowLoginPage(true)
+      navigate('/login')
       return
     }
     
-    setCurrentPage(page)
-    if (page === 'plan') {
-      setIsAIAssistantOpen(true)
+    // 使用路由导航
+    switch (page) {
+      case 'dashboard':
+        navigate('/dashboard')
+        break
+      case 'plan':
+        navigate('/plan')
+        setIsAIAssistantOpen(true)
+        break
+      case 'market':
+        navigate('/market')
+        break
+      case 'tools':
+        navigate('/tools')
+        break
+      case 'community':
+        navigate('/community')
+        break
+      case 'training':
+        navigate('/training')
+        break
+      default:
+        navigate('/')
     }
   }
 
   const handleLogin = (userData) => {
     setUser(userData)
     setIsLoggedIn(true)
-    setCurrentPage('dashboard')
+    navigate('/dashboard')
     setShowLoginModal(false)
-    setShowLoginPage(false)
   }
 
   const handleLogout = async () => {
@@ -114,49 +135,24 @@ function App() {
       // 更新状态
       setUser(null)
       setIsLoggedIn(false)
-      setCurrentPage('home')
+      navigate('/')
     }
   }
 
   const handleBackFromLogin = () => {
-    setShowLoginPage(false)
-    setCurrentPage('home')
+    navigate('/')
   }
 
   const handleShowLogin = () => {
-    setShowLoginPage(true)
+    navigate('/login')
   }
 
   const toggleAIAssistant = () => {
     setIsAIAssistantOpen(!isAIAssistantOpen)
   }
 
-  const renderMainContent = () => {
-    switch (currentPage) {
-      case 'plan':
-        return <PlanningWizard />
-      case 'market':
-        return <MarketAnalysis />
-      case 'tools':
-        return <OverseasTools />
-      case 'community':
-        return <Community />
-      case 'dashboard':
-        return <DashboardPage user={user} onLogout={handleLogout} />
-      case 'training':
-        return <OverseasTraining />
-      default:
-        return (
-          <>
-            <HeroSection 
-              onStartPlanning={() => handleNavigation('plan')}
-              onStartTraining={() => handleNavigation('training')}
-            />
-            <FeaturesSection />
-          </>
-        )
-    }
-  }
+  // 获取当前路径
+  const currentPath = location.pathname
 
   // 显示加载状态
   if (isLoading) {
@@ -176,19 +172,50 @@ function App() {
 
   return (
     <div className="app">
-        {/* 只在非出海控制台页面显示原导航栏 */}
-        {currentPage !== 'dashboard' && (
-          <Header 
-            currentPage={currentPage} 
-            onNavigate={handleNavigation}
-            user={user}
-            onLogout={handleLogout}
-            onShowLogin={handleShowLogin}
+      {/* 只在非出海控制台页面显示原导航栏 */}
+      {currentPath !== '/dashboard' && (
+        <Header 
+          currentPage={currentPath === '/' ? 'home' : currentPath.substring(1)} 
+          onNavigate={handleNavigation}
+          user={user}
+          onLogout={handleLogout}
+          onShowLogin={handleShowLogin}
+        />
+      )}
+    
+      <main className={`main-content ${currentPath === '/dashboard' ? 'dashboard-mode' : ''}`}>
+        <Routes>
+          <Route path="/" element={
+            <>
+              <HeroSection 
+                onStartPlanning={() => handleNavigation('plan')}
+                onStartTraining={() => handleNavigation('training')}
+              />
+              <FeaturesSection />
+            </>
+          } />
+          <Route path="/plan" element={<PlanningWizard />} />
+          <Route path="/market" element={<MarketAnalysis />} />
+          <Route path="/tools" element={<OverseasTools />} />
+          <Route path="/community" element={<Community />} />
+          <Route path="/training" element={<OverseasTraining />} />
+          <Route 
+            path="/dashboard" 
+            element={
+              isLoggedIn ? (
+                <DashboardPage user={user} onLogout={handleLogout} />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            } 
           />
-        )}
-      
-      <main className={`main-content ${currentPage === 'dashboard' ? 'dashboard-mode' : ''}`}>
-        {renderMainContent()}
+          <Route path="/login" element={
+            <LoginPage
+              onLogin={handleLogin}
+              onBack={handleBackFromLogin}
+            />
+          } />
+        </Routes>
       </main>
 
       <Footer />
@@ -208,14 +235,6 @@ function App() {
           <span className="ai-toggle-icon">🤖</span>
         </button>
       )}
-
-      {/* 登录页面 */}
-      {showLoginPage && (
-        <LoginPage
-          onLogin={handleLogin}
-          onBack={handleBackFromLogin}
-        />
-      )}
       
       {/* 登录模态框 */}
       {showLoginModal && (
@@ -226,6 +245,15 @@ function App() {
         />
       )}
     </div>
+  )
+}
+
+// 主App组件，包装Router
+function App() {
+  return (
+    <Router>
+      <AppContent />
+    </Router>
   )
 }
 

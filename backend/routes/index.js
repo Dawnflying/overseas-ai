@@ -10,6 +10,7 @@ const router = express.Router();
 const authRoutes = require('./auth');
 const aiRoutes = require('./ai');
 const toolsRoutes = require('./tools');
+const knowledgeRoutes = require('./knowledge');
 
 // 健康检查路由
 router.get('/health', (req, res) => {
@@ -26,6 +27,7 @@ router.get('/health', (req, res) => {
 router.use('/auth', authRoutes);
 router.use('/ai', aiRoutes);
 router.use('/tools', toolsRoutes);
+router.use('/knowledge', knowledgeRoutes);
 
 // 其他业务路由可以在这里添加
 // router.use('/dashboard', dashboardRoutes);

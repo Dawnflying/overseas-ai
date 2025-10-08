@@ -75,7 +75,7 @@ const HeroSection = ({ onStartPlanning, onStartTraining }) => {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .hero-section {
           padding: 4rem 0;
           background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);

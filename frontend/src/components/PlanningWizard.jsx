@@ -565,7 +565,7 @@ const PlanningWizard = () => {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .planning-wizard {
           padding: 2rem 0;
           background: #f8fafc;

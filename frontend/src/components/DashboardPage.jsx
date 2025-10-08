@@ -1,7 +1,13 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import OverseasDashboard from './OverseasDashboard';
 
 const DashboardPage = ({ user, onLogout }) => {
+  const navigate = useNavigate();
+
+  const handleBackToHome = () => {
+    navigate('/');
+  };
   return (
     <div style={{
       minHeight: '100vh',
@@ -55,6 +61,38 @@ const DashboardPage = ({ user, onLogout }) => {
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            {/* 返回首页按钮 */}
+            <button
+              onClick={handleBackToHome}
+              style={{
+                padding: '8px 16px',
+                backgroundColor: '#f8fafc',
+                color: '#6b7280',
+                border: '1px solid #e5e7eb',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: '500',
+                transition: 'all 0.2s ease',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = '#3b82f6';
+                e.currentTarget.style.backgroundColor = '#eff6ff';
+                e.currentTarget.style.borderColor = '#3b82f6';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = '#6b7280';
+                e.currentTarget.style.backgroundColor = '#f8fafc';
+                e.currentTarget.style.borderColor = '#e5e7eb';
+              }}
+            >
+              <span>🏠</span>
+              返回首页
+            </button>
+
             <div style={{
               display: 'flex',
               alignItems: 'center',

@@ -1,0 +1,180 @@
+version: '3.8'
+
+# 出海AI平台 - 中间件服务统一配置
+# 包含: MySQL, Elasticsearch, Kibana, Redis
+
+services:
+  # ==================== MySQL 数据库 ====================
+  mysql:
+    image: mysql:8.0
+    container_name: overseas-ai-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: jarvis@888
+      MYSQL_DATABASE: overseas-ai
+      MYSQL_USER: overseas-ai
+      MYSQL_PASSWORD: jarvis@888
+      TZ: Asia/Shanghai
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/config/my.cnf:/etc/mysql/conf.d/my.cnf:ro
+      - ./mysql/init:/docker-entrypoint-initdb.d:ro
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-authentication-plugin=mysql_native_password
+      - --max_connections=1000
+      - --max_allowed_packet=256M
+    networks:
+      - overseas-ai-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pjarvis@888"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  # ==================== Elasticsearch 搜索引擎 ====================
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.0
+    container_name: overseas-ai-elasticsearch
+    restart: unless-stopped
+    environment:
+      # 节点配置
+      - node.name=elasticsearch-master
+      - cluster.name=overseas-ai-cluster
+      - node.roles=master,data,ingest
+      
+      # 网络配置
+      - network.host=0.0.0.0
+      - http.port=9200
+      - transport.port=9300
+      
+      # 安全配置（开发环境禁用）
+      - xpack.security.enabled=false
+      - xpack.security.enrollment.enabled=false
+      - xpack.security.http.ssl.enabled=false
+      - xpack.security.transport.ssl.enabled=false
+      
+      # 内存配置
+      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+      
+      # 发现配置
+      - discovery.type=single-node
+      
+      # 向量检索配置
+      - indices.query.knn=true
+      
+      # 时区配置
+      - TZ=Asia/Shanghai
+      
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    
+    volumes:
+      - ./elasticsearch/data:/usr/share/elasticsearch/data
+      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+      - ./elasticsearch/logs:/usr/share/elasticsearch/logs
+    
+    networks:
+      - overseas-ai-network
+    
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  # ==================== Kibana 可视化界面 ====================
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.13.0
+    container_name: overseas-ai-kibana
+    restart: unless-stopped
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - SERVER_NAME=kibana
+      - SERVER_HOST=0.0.0.0
+      - SERVER_PORT=5601
+      - TZ=Asia/Shanghai
+      - ELASTICSEARCH_USERNAME=kibana_system
+      - ELASTICSEARCH_PASSWORD=changeme
+      - I18N_LOCALE=zh-CN
+      
+    ports:
+      - "5601:5601"
+    
+    volumes:
+      - ./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml:ro
+    
+    networks:
+      - overseas-ai-network
+    
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5601/api/status || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  # ==================== Redis 缓存服务 ====================
+  redis:
+    image: redis:7-alpine
+    container_name: overseas-ai-redis
+    restart: unless-stopped
+    command: 
+      - redis-server
+      - --appendonly yes
+      - --requirepass jarvis@888
+      - --maxmemory 512mb
+      - --maxmemory-policy allkeys-lru
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis/data:/data
+      - ./redis/config/redis.conf:/usr/local/etc/redis/redis.conf:ro
+    networks:
+      - overseas-ai-network
+    environment:
+      - TZ=Asia/Shanghai
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+# ==================== 网络配置 ====================
+networks:
+  overseas-ai-network:
+    name: overseas-ai-network
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.25.0.0/16
+
+# ==================== 数据卷配置 ====================
+volumes:
+  mysql_data:
+    driver: local
+  elasticsearch_data:
+    driver: local
+  redis_data:
+    driver: local
+

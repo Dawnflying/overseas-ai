@@ -542,7 +542,7 @@ const MarketAnalysis = () => {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .market-analysis {
           padding: 2rem 0;
           background: #f8fafc;

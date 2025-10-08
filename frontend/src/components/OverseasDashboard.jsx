@@ -3,6 +3,7 @@ import TikTokShopManager from './TikTokShopManager'
 import IndependentStorePlatform from './IndependentStorePlatform'
 import GoogleAdsManager from './GoogleAdsManager'
 import CustomerServiceManager from './CustomerServiceManager'
+import KnowledgeBase from './KnowledgeBase'
 
 const OverseasDashboard = () => {
   const [activeModule, setActiveModule] = useState('overview')
@@ -92,6 +93,17 @@ const OverseasDashboard = () => {
         { id: 'available', name: '可用工具', icon: '➕' },
         { id: 'configurations', name: '配置管理', icon: '⚙️' },
         { id: 'api-keys', name: 'API密钥', icon: '🔑' }
+      ]
+    },
+    {
+      id: 'knowledge',
+      name: '知识库',
+      icon: '📚',
+      subModules: [
+        { id: 'knowledge-base', name: '知识库管理', icon: '📖' },
+        { id: 'compliance', name: '合规认证', icon: '🛡️' },
+        { id: 'market-guide', name: '市场指南', icon: '🗺️' },
+        { id: 'best-practices', name: '最佳实践', icon: '⭐' }
       ]
     },
     {
@@ -234,6 +246,8 @@ const OverseasDashboard = () => {
         return renderCustomerContent()
       case 'tools':
         return renderToolsContent()
+      case 'knowledge':
+        return renderKnowledgeContent()
       case 'settings':
         return renderSettingsContent()
       default:
@@ -287,19 +301,220 @@ const OverseasDashboard = () => {
           </div>
 
           <div className="charts-section">
-            <div className="chart-card">
-              <h3>📈 销售趋势</h3>
-              <div className="chart-placeholder">
-                <p>销售趋势图表</p>
-                <small>这里将显示销售数据图表</small>
+            {/* 销售趋势图表 */}
+            <div className="chart-card sales-trend-chart">
+              <div className="chart-header">
+                <h3>📈 销售趋势</h3>
+                <div className="chart-period-selector">
+                  <button className="period-btn active">7天</button>
+                  <button className="period-btn">30天</button>
+                  <button className="period-btn">90天</button>
+                </div>
+              </div>
+              <div className="chart-content">
+                <div className="sales-trend-chart-inner">
+                  {/* Y轴标签 */}
+                  <div className="chart-y-axis">
+                    <span className="y-label">$15k</span>
+                    <span className="y-label">$12k</span>
+                    <span className="y-label">$9k</span>
+                    <span className="y-label">$6k</span>
+                    <span className="y-label">$3k</span>
+                    <span className="y-label">$0</span>
+                  </div>
+                  {/* 图表区域 */}
+                  <div className="chart-area">
+                    {/* 背景网格线 */}
+                    <div className="chart-grid">
+                      <div className="grid-line"></div>
+                      <div className="grid-line"></div>
+                      <div className="grid-line"></div>
+                      <div className="grid-line"></div>
+                      <div className="grid-line"></div>
+                    </div>
+                    {/* 折线图数据点 */}
+                    <svg className="chart-svg" viewBox="0 0 700 200" preserveAspectRatio="none">
+                      {/* 渐变填充 */}
+                      <defs>
+                        <linearGradient id="salesGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                          <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.3"/>
+                          <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.05"/>
+                        </linearGradient>
+                      </defs>
+                      {/* 面积填充 */}
+                      <path 
+                        d="M 0,160 L 100,140 L 200,130 L 300,110 L 400,95 L 500,85 L 600,70 L 700,60 L 700,200 L 0,200 Z" 
+                        fill="url(#salesGradient)"
+                      />
+                      {/* 折线 */}
+                      <path 
+                        d="M 0,160 L 100,140 L 200,130 L 300,110 L 400,95 L 500,85 L 600,70 L 700,60" 
+                        stroke="#3b82f6" 
+                        strokeWidth="3" 
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      {/* 数据点 */}
+                      <circle cx="0" cy="160" r="5" fill="#3b82f6" />
+                      <circle cx="100" cy="140" r="5" fill="#3b82f6" />
+                      <circle cx="200" cy="130" r="5" fill="#3b82f6" />
+                      <circle cx="300" cy="110" r="5" fill="#3b82f6" />
+                      <circle cx="400" cy="95" r="5" fill="#3b82f6" />
+                      <circle cx="500" cy="85" r="5" fill="#3b82f6" />
+                      <circle cx="600" cy="70" r="5" fill="#3b82f6" />
+                      <circle cx="700" cy="60" r="5" fill="#3b82f6" />
+                    </svg>
+                    {/* X轴标签 */}
+                    <div className="chart-x-axis">
+                      <span className="x-label">周一</span>
+                      <span className="x-label">周二</span>
+                      <span className="x-label">周三</span>
+                      <span className="x-label">周四</span>
+                      <span className="x-label">周五</span>
+                      <span className="x-label">周六</span>
+                      <span className="x-label">周日</span>
+                    </div>
+                  </div>
+                </div>
+                {/* 图表说明 */}
+                <div className="chart-legend">
+                  <div className="legend-item">
+                    <span className="legend-color" style={{background: '#3b82f6'}}></span>
+                    <span className="legend-text">销售额</span>
+                  </div>
+                  <div className="chart-summary">
+                    <span className="summary-label">周总计:</span>
+                    <span className="summary-value">$68,450</span>
+                    <span className="summary-change positive">↑ 18.5%</span>
+                  </div>
+                </div>
               </div>
             </div>
             
-            <div className="chart-card">
-              <h3>🏆 平台分布</h3>
-              <div className="chart-placeholder">
-                <p>平台销售分布</p>
-                <small>这里将显示各平台销售占比</small>
+            {/* 平台分布图表 */}
+            <div className="chart-card platform-distribution-chart">
+              <div className="chart-header">
+                <h3>🏆 平台分布</h3>
+                <div className="chart-info">
+                  <span className="info-badge">本月数据</span>
+                </div>
+              </div>
+              <div className="chart-content">
+                <div className="platform-chart-container">
+                  {/* 环形图 */}
+                  <div className="donut-chart">
+                    <svg viewBox="0 0 200 200" className="donut-svg">
+                      {/* 背景圆环 */}
+                      <circle cx="100" cy="100" r="80" fill="none" stroke="#f1f5f9" strokeWidth="30"/>
+                      {/* Amazon - 40% (蓝色) */}
+                      <circle 
+                        cx="100" cy="100" r="80" 
+                        fill="none" 
+                        stroke="#3b82f6" 
+                        strokeWidth="30"
+                        strokeDasharray="201 503"
+                        strokeDashoffset="0"
+                        transform="rotate(-90 100 100)"
+                      />
+                      {/* TikTok - 30% (紫色) */}
+                      <circle 
+                        cx="100" cy="100" r="80" 
+                        fill="none" 
+                        stroke="#8b5cf6" 
+                        strokeWidth="30"
+                        strokeDasharray="151 503"
+                        strokeDashoffset="-201"
+                        transform="rotate(-90 100 100)"
+                      />
+                      {/* Shopify - 20% (绿色) */}
+                      <circle 
+                        cx="100" cy="100" r="80" 
+                        fill="none" 
+                        stroke="#10b981" 
+                        strokeWidth="30"
+                        strokeDasharray="100 503"
+                        strokeDashoffset="-352"
+                        transform="rotate(-90 100 100)"
+                      />
+                      {/* 其他 - 10% (橙色) */}
+                      <circle 
+                        cx="100" cy="100" r="80" 
+                        fill="none" 
+                        stroke="#f59e0b" 
+                        strokeWidth="30"
+                        strokeDasharray="50 503"
+                        strokeDashoffset="-452"
+                        transform="rotate(-90 100 100)"
+                      />
+                      {/* 中心文字 */}
+                      <text x="100" y="95" textAnchor="middle" fontSize="24" fontWeight="bold" fill="#1e293b">
+                        $245k
+                      </text>
+                      <text x="100" y="115" textAnchor="middle" fontSize="12" fill="#64748b">
+                        总销售额
+                      </text>
+                    </svg>
+                  </div>
+                  {/* 图例 */}
+                  <div className="platform-legend">
+                    <div className="legend-item-platform">
+                      <div className="legend-header">
+                        <div className="legend-indicator">
+                          <span className="legend-dot" style={{background: '#3b82f6'}}></span>
+                          <span className="legend-name">Amazon</span>
+                        </div>
+                        <span className="legend-percentage">40%</span>
+                      </div>
+                      <div className="legend-details">
+                        <span className="legend-amount">$98,000</span>
+                        <span className="legend-trend positive">↑ 12%</span>
+                      </div>
+                    </div>
+                    
+                    <div className="legend-item-platform">
+                      <div className="legend-header">
+                        <div className="legend-indicator">
+                          <span className="legend-dot" style={{background: '#8b5cf6'}}></span>
+                          <span className="legend-name">TikTok Shop</span>
+                        </div>
+                        <span className="legend-percentage">30%</span>
+                      </div>
+                      <div className="legend-details">
+                        <span className="legend-amount">$73,500</span>
+                        <span className="legend-trend positive">↑ 25%</span>
+                      </div>
+                    </div>
+                    
+                    <div className="legend-item-platform">
+                      <div className="legend-header">
+                        <div className="legend-indicator">
+                          <span className="legend-dot" style={{background: '#10b981'}}></span>
+                          <span className="legend-name">Shopify</span>
+                        </div>
+                        <span className="legend-percentage">20%</span>
+                      </div>
+                      <div className="legend-details">
+                        <span className="legend-amount">$49,000</span>
+                        <span className="legend-trend positive">↑ 8%</span>
+                      </div>
+                    </div>
+                    
+                    <div className="legend-item-platform">
+                      <div className="legend-header">
+                        <div className="legend-indicator">
+                          <span className="legend-dot" style={{background: '#f59e0b'}}></span>
+                          <span className="legend-name">其他平台</span>
+                        </div>
+                        <span className="legend-percentage">10%</span>
+                      </div>
+                      <div className="legend-details">
+                        <span className="legend-amount">$24,500</span>
+                        <span className="legend-trend neutral">→ 0%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -870,6 +1085,155 @@ const OverseasDashboard = () => {
     )
   }
 
+  const renderKnowledgeContent = () => {
+    if (activeSubModule === 'knowledge-base') {
+      return <KnowledgeBase />
+    }
+    
+    return (
+      <div style={{
+        padding: '32px',
+        backgroundColor: '#f8fafc',
+        minHeight: '100vh'
+      }}>
+        <div style={{
+          maxWidth: '1200px',
+          margin: '0 auto'
+        }}>
+          <div style={{
+            backgroundColor: '#ffffff',
+            borderRadius: '16px',
+            padding: '32px',
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+            border: '1px solid #e5e7eb'
+          }}>
+            <h2 style={{
+              fontSize: '32px',
+              fontWeight: 'bold',
+              color: '#111827',
+              marginBottom: '16px',
+              margin: '0 0 16px 0'
+            }}>📚 知识库</h2>
+            <p style={{
+              fontSize: '16px',
+              color: '#6b7280',
+              marginBottom: '32px',
+              margin: '0 0 32px 0'
+            }}>选择下方的知识库功能开始管理您的出海知识</p>
+            
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+              gap: '24px'
+            }}>
+              <div style={{
+                padding: '24px',
+                backgroundColor: '#f8fafc',
+                borderRadius: '12px',
+                border: '1px solid #e5e7eb',
+                textAlign: 'center',
+                cursor: 'pointer',
+                transition: 'all 0.2s'
+              }}
+              onClick={() => setActiveSubModule('knowledge-base')}
+              onMouseEnter={(e) => {
+                e.target.style.backgroundColor = '#f0f9ff'
+                e.target.style.borderColor = '#3b82f6'
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = '#f8fafc'
+                e.target.style.borderColor = '#e5e7eb'
+              }}>
+                <div style={{ fontSize: '48px', marginBottom: '16px' }}>📖</div>
+                <h3 style={{
+                  fontSize: '20px',
+                  fontWeight: '600',
+                  color: '#111827',
+                  marginBottom: '8px',
+                  margin: '0 0 8px 0'
+                }}>知识库管理</h3>
+                <p style={{
+                  fontSize: '14px',
+                  color: '#6b7280',
+                  margin: '0'
+                }}>管理出海合规知识库，支持智能搜索和AI问答</p>
+              </div>
+
+              <div style={{
+                padding: '24px',
+                backgroundColor: '#f8fafc',
+                borderRadius: '12px',
+                border: '1px solid #e5e7eb',
+                textAlign: 'center',
+                opacity: '0.6'
+              }}>
+                <div style={{ fontSize: '48px', marginBottom: '16px' }}>🛡️</div>
+                <h3 style={{
+                  fontSize: '20px',
+                  fontWeight: '600',
+                  color: '#111827',
+                  marginBottom: '8px',
+                  margin: '0 0 8px 0'
+                }}>合规认证</h3>
+                <p style={{
+                  fontSize: '14px',
+                  color: '#6b7280',
+                  margin: '0'
+                }}>即将推出 - 合规认证管理</p>
+              </div>
+
+              <div style={{
+                padding: '24px',
+                backgroundColor: '#f8fafc',
+                borderRadius: '12px',
+                border: '1px solid #e5e7eb',
+                textAlign: 'center',
+                opacity: '0.6'
+              }}>
+                <div style={{ fontSize: '48px', marginBottom: '16px' }}>🗺️</div>
+                <h3 style={{
+                  fontSize: '20px',
+                  fontWeight: '600',
+                  color: '#111827',
+                  marginBottom: '8px',
+                  margin: '0 0 8px 0'
+                }}>市场指南</h3>
+                <p style={{
+                  fontSize: '14px',
+                  color: '#6b7280',
+                  margin: '0'
+                }}>即将推出 - 目标市场指南</p>
+              </div>
+
+              <div style={{
+                padding: '24px',
+                backgroundColor: '#f8fafc',
+                borderRadius: '12px',
+                border: '1px solid #e5e7eb',
+                textAlign: 'center',
+                opacity: '0.6'
+              }}>
+                <div style={{ fontSize: '48px', marginBottom: '16px' }}>⭐</div>
+                <h3 style={{
+                  fontSize: '20px',
+                  fontWeight: '600',
+                  color: '#111827',
+                  marginBottom: '8px',
+                  margin: '0 0 8px 0'
+                }}>最佳实践</h3>
+                <p style={{
+                  fontSize: '14px',
+                  color: '#6b7280',
+                  margin: '0'
+                }}>即将推出 - 出海最佳实践</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   const renderSettingsContent = () => (
     <div className="settings-content">
       <h2>⚙️ 系统设置</h2>
@@ -959,7 +1323,7 @@ const OverseasDashboard = () => {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .overseas-dashboard {
           min-height: 100vh;
           background: #f8fafc;
@@ -1267,6 +1631,306 @@ const OverseasDashboard = () => {
 
         .chart-placeholder small {
           font-size: 0.875rem;
+        }
+
+        /* 图表通用样式 */
+        .chart-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 1.5rem;
+        }
+
+        .chart-period-selector {
+          display: flex;
+          gap: 0.5rem;
+        }
+
+        .period-btn {
+          padding: 0.375rem 0.875rem;
+          border: 1px solid #e2e8f0;
+          background: white;
+          border-radius: 6px;
+          font-size: 0.875rem;
+          cursor: pointer;
+          transition: all 0.2s;
+          color: #64748b;
+        }
+
+        .period-btn:hover {
+          background: #f8fafc;
+          border-color: #cbd5e1;
+        }
+
+        .period-btn.active {
+          background: #3b82f6;
+          border-color: #3b82f6;
+          color: white;
+        }
+
+        .chart-info .info-badge {
+          padding: 0.375rem 0.875rem;
+          background: #eff6ff;
+          color: #3b82f6;
+          border-radius: 6px;
+          font-size: 0.875rem;
+          font-weight: 500;
+        }
+
+        /* 销售趋势图表样式 */
+        .sales-trend-chart .chart-content {
+          padding: 1rem 0;
+        }
+
+        .sales-trend-chart-inner {
+          display: flex;
+          gap: 1rem;
+        }
+
+        .chart-y-axis {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          padding-right: 0.75rem;
+          border-right: 1px solid #e2e8f0;
+        }
+
+        .y-label {
+          font-size: 0.75rem;
+          color: #94a3b8;
+          text-align: right;
+          line-height: 1;
+        }
+
+        .chart-area {
+          flex: 1;
+          position: relative;
+          height: 200px;
+        }
+
+        .chart-grid {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 30px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+        }
+
+        .grid-line {
+          height: 1px;
+          background: #f1f5f9;
+        }
+
+        .chart-svg {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: calc(100% - 30px);
+        }
+
+        .chart-svg path {
+          transition: all 0.3s ease;
+        }
+
+        .chart-svg circle {
+          transition: all 0.3s ease;
+        }
+
+        .chart-svg circle:hover {
+          r: 7;
+          filter: drop-shadow(0 2px 4px rgba(59, 130, 246, 0.3));
+        }
+
+        .chart-x-axis {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          display: flex;
+          justify-content: space-around;
+          padding-top: 0.5rem;
+        }
+
+        .x-label {
+          font-size: 0.75rem;
+          color: #94a3b8;
+          text-align: center;
+        }
+
+        .chart-legend {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-top: 1.5rem;
+          padding-top: 1rem;
+          border-top: 1px solid #f1f5f9;
+        }
+
+        .legend-item {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
+        .legend-color {
+          width: 12px;
+          height: 12px;
+          border-radius: 3px;
+        }
+
+        .legend-text {
+          font-size: 0.875rem;
+          color: #64748b;
+        }
+
+        .chart-summary {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+        }
+
+        .summary-label {
+          font-size: 0.875rem;
+          color: #64748b;
+        }
+
+        .summary-value {
+          font-size: 1.125rem;
+          font-weight: 600;
+          color: #1e293b;
+        }
+
+        .summary-change {
+          padding: 0.25rem 0.625rem;
+          border-radius: 4px;
+          font-size: 0.875rem;
+          font-weight: 600;
+        }
+
+        .summary-change.positive {
+          background: #dcfce7;
+          color: #16a34a;
+        }
+
+        /* 平台分布图表样式 */
+        .platform-distribution-chart .chart-content {
+          padding: 1rem 0;
+        }
+
+        .platform-chart-container {
+          display: flex;
+          align-items: center;
+          gap: 3rem;
+        }
+
+        .donut-chart {
+          width: 200px;
+          height: 200px;
+          flex-shrink: 0;
+        }
+
+        .donut-svg {
+          width: 100%;
+          height: 100%;
+          transform: scale(1);
+          transition: transform 0.3s ease;
+        }
+
+        .donut-svg:hover {
+          transform: scale(1.05);
+        }
+
+        .donut-svg circle {
+          transition: all 0.3s ease;
+        }
+
+        .platform-legend {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        .legend-item-platform {
+          padding: 0.875rem;
+          background: #f8fafc;
+          border-radius: 8px;
+          transition: all 0.2s;
+        }
+
+        .legend-item-platform:hover {
+          background: #f1f5f9;
+          transform: translateX(4px);
+        }
+
+        .legend-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 0.5rem;
+        }
+
+        .legend-indicator {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
+        .legend-dot {
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .legend-name {
+          font-size: 0.875rem;
+          font-weight: 500;
+          color: #1e293b;
+        }
+
+        .legend-percentage {
+          font-size: 1.125rem;
+          font-weight: 600;
+          color: #1e293b;
+        }
+
+        .legend-details {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          padding-left: 1.5rem;
+        }
+
+        .legend-amount {
+          font-size: 0.875rem;
+          color: #64748b;
+        }
+
+        .legend-trend {
+          padding: 0.125rem 0.5rem;
+          border-radius: 4px;
+          font-size: 0.75rem;
+          font-weight: 600;
+        }
+
+        .legend-trend.positive {
+          background: #dcfce7;
+          color: #16a34a;
+        }
+
+        .legend-trend.neutral {
+          background: #f3f4f6;
+          color: #6b7280;
+        }
+
+        .legend-trend.negative {
+          background: #fee2e2;
+          color: #dc2626;
         }
 
         /* 电商平台样式 */
