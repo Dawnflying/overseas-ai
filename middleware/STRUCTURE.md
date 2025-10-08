@@ -210,9 +210,9 @@ vim mysql/config/my.cnf
 
 | 服务 | 用户名 | 密码 | 数据库/说明 |
 |------|--------|------|------------|
-| MySQL | overseas-ai | jarvis@888 | overseas-ai |
-| MySQL | root | jarvis@888 | - |
-| Redis | - | jarvis@888 | - |
+| MySQL | dbuser | 环境变量 | overseas-ai |
+| MySQL | root | 环境变量 | - |
+| Redis | - | 环境变量 | - |
 | Elasticsearch | - | - | 禁用认证（开发） |
 | Kibana | - | - | 禁用认证（开发） |
 

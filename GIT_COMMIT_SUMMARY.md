@@ -230,12 +230,12 @@ docker compose restart
 需要在 `backend/.env` 中添加：
 
 ```env
-# MySQL
-MYSQL_HOST=rm-uf625c9d22j18o6579o.mysql.rds.aliyuncs.com
+# MySQL（生产环境请使用实际配置）
+MYSQL_HOST=your_mysql_host
 MYSQL_PORT=3306
 MYSQL_DATABASE=overseas-ai
-MYSQL_USERNAME=overseas-ai
-MYSQL_PASSWORD=jarvis@888
+MYSQL_USERNAME=your_mysql_user
+MYSQL_PASSWORD=your_mysql_password
 
 # Elasticsearch
 ELASTICSEARCH_URL=http://localhost:9200
@@ -243,7 +243,7 @@ ELASTICSEARCH_URL=http://localhost:9200
 # Redis
 REDIS_HOST=localhost
 REDIS_PORT=6379
-REDIS_PASSWORD=jarvis@888
+REDIS_PASSWORD=your_redis_password
 
 # OSS
 OSS_BUCKET=overseas-ai

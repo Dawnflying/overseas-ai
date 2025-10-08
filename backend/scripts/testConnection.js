@@ -8,11 +8,11 @@ async function testConnection() {
   console.log('🔗 测试MySQL数据库连接...');
   
   const connectionConfig = {
-    host: 'rm-uf625c9d22j18o6579o.mysql.rds.aliyuncs.com',
-    port: 3306,
-    user: 'overseas-ai',
-    password: 'jarvis@888',
-    database: 'overseas-ai',
+    host: process.env.MYSQL_HOST || 'localhost',
+    port: process.env.MYSQL_PORT || 3306,
+    user: process.env.MYSQL_USERNAME || 'root',
+    password: process.env.MYSQL_PASSWORD || 'password',
+    database: process.env.MYSQL_DATABASE || 'overseas-ai',
     connectTimeout: 10000,
     acquireTimeout: 10000,
     timeout: 10000

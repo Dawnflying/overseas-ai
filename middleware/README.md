@@ -11,6 +11,29 @@
 
 ## 🚀 快速开始
 
+### 0. 配置环境变量（首次使用）
+
+```bash
+cd middleware
+
+# 创建 .env 文件
+cat > .env << 'EOF'
+# MySQL 配置
+MYSQL_ROOT_PASSWORD=your_secure_root_password
+MYSQL_DATABASE=overseas-ai
+MYSQL_USER=dbuser
+MYSQL_PASSWORD=your_secure_db_password
+
+# Redis 配置
+REDIS_PASSWORD=your_secure_redis_password
+EOF
+
+# 设置权限
+chmod 600 .env
+```
+
+**⚠️ 重要**: 请修改上述密码为强密码！详见 [ENV_CONFIG.md](./ENV_CONFIG.md)
+
 ### 1. 启动所有服务
 
 ```bash
@@ -66,9 +89,9 @@ docker compose down -v
 
 - **端口**: 3306
 - **数据库**: overseas-ai
-- **用户**: overseas-ai
-- **密码**: jarvis@888
-- **Root密码**: jarvis@888
+- **用户**: dbuser（可通过环境变量配置）
+- **密码**: 通过环境变量 `MYSQL_PASSWORD` 设置
+- **Root密码**: 通过环境变量 `MYSQL_ROOT_PASSWORD` 设置
 - **数据目录**: `./mysql/data`
 - **配置文件**: `./mysql/config/my.cnf`
 - **初始化脚本**: `./mysql/init/`
@@ -76,14 +99,14 @@ docker compose down -v
 #### 连接字符串
 
 ```
-mysql://overseas-ai:jarvis@888@localhost:3306/overseas-ai
+mysql://dbuser:dbpassword@localhost:3306/overseas-ai
 ```
 
 #### 命令行连接
 
 ```bash
-mysql -h 127.0.0.1 -P 3306 -u overseas-ai -p
-# 密码: jarvis@888
+mysql -h 127.0.0.1 -P 3306 -u dbuser -p
+# 密码: 通过环境变量设置
 ```
 
 ### Elasticsearch
@@ -125,7 +148,7 @@ curl http://localhost:9200/_cluster/health?pretty
 ### Redis
 
 - **端口**: 6379
-- **密码**: jarvis@888
+- **密码**: 通过环境变量 `REDIS_PASSWORD` 设置
 - **数据目录**: `./redis/data`
 - **配置文件**: `./redis/config/redis.conf`
 - **最大内存**: 512MB
@@ -134,13 +157,13 @@ curl http://localhost:9200/_cluster/health?pretty
 #### 连接字符串
 
 ```
-redis://:jarvis@888@localhost:6379/0
+redis://:${REDIS_PASSWORD}@localhost:6379/0
 ```
 
 #### 命令行连接
 
 ```bash
-redis-cli -h 127.0.0.1 -p 6379 -a jarvis@888
+redis-cli -h 127.0.0.1 -p 6379 -a ${REDIS_PASSWORD}
 ```
 
 ## 📊 目录结构
@@ -238,7 +261,7 @@ docker compose up -d mysql
 
 ```bash
 # 测试连接
-redis-cli -h 127.0.0.1 -p 6379 -a jarvis@888 ping
+redis-cli -h 127.0.0.1 -p 6379 -a ${REDIS_PASSWORD} ping
 
 # 检查日志
 docker compose logs redis
@@ -282,8 +305,8 @@ curl http://localhost:9200/_cat/indices?v
 ### Redis 性能
 
 ```bash
-redis-cli -h 127.0.0.1 -p 6379 -a jarvis@888 INFO
-redis-cli -h 127.0.0.1 -p 6379 -a jarvis@888 INFO stats
+redis-cli -h 127.0.0.1 -p 6379 -a ${REDIS_PASSWORD} INFO
+redis-cli -h 127.0.0.1 -p 6379 -a ${REDIS_PASSWORD} INFO stats
 ```
 
 ## 🔄 备份和恢复
@@ -319,7 +342,7 @@ curl -X PUT "localhost:9200/_snapshot/my_backup/snapshot_1?wait_for_completion=t
 
 ```bash
 # 手动保存
-redis-cli -h 127.0.0.1 -p 6379 -a jarvis@888 SAVE
+redis-cli -h 127.0.0.1 -p 6379 -a ${REDIS_PASSWORD} SAVE
 
 # 复制 RDB 文件
 cp ./redis/data/dump.rdb ./redis/data/dump.rdb.backup

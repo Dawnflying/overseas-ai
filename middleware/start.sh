@@ -108,7 +108,7 @@ health_check() {
     log_info "执行健康检查..."
     
     # MySQL
-    if docker exec overseas-ai-mysql mysqladmin ping -h localhost -u root -pjarvis@888 &> /dev/null; then
+    if docker exec overseas-ai-mysql mysqladmin ping -h localhost -u root -p${MYSQL_ROOT_PASSWORD:-rootpassword} &> /dev/null; then
         echo -e "  MySQL:         ${GREEN}✓ 健康${NC}"
     else
         echo -e "  MySQL:         ${RED}✗ 异常${NC}"
@@ -122,7 +122,7 @@ health_check() {
     fi
     
     # Redis
-    if docker exec overseas-ai-redis redis-cli -a jarvis@888 ping &> /dev/null; then
+    if docker exec overseas-ai-redis redis-cli -a ${REDIS_PASSWORD:-redispassword} ping &> /dev/null; then
         echo -e "  Redis:         ${GREEN}✓ 健康${NC}"
     else
         echo -e "  Redis:         ${RED}✗ 异常${NC}"

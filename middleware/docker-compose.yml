@@ -10,10 +10,10 @@ services:
     container_name: overseas-ai-mysql
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: jarvis@888
-      MYSQL_DATABASE: overseas-ai
-      MYSQL_USER: overseas-ai
-      MYSQL_PASSWORD: jarvis@888
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-overseas-ai}
+      MYSQL_USER: ${MYSQL_USER:-dbuser}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-dbpassword}
       TZ: Asia/Shanghai
     ports:
       - "3306:3306"
@@ -30,7 +30,7 @@ services:
     networks:
       - overseas-ai-network
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pjarvis@888"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$${MYSQL_ROOT_PASSWORD:-rootpassword}"]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -140,7 +140,7 @@ services:
     command: 
       - redis-server
       - --appendonly yes
-      - --requirepass jarvis@888
+      - --requirepass ${REDIS_PASSWORD:-redispassword}
       - --maxmemory 512mb
       - --maxmemory-policy allkeys-lru
     ports:
