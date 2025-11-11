@@ -3,10 +3,20 @@ import React, { useState, useEffect } from 'react';
 const OverseasTraining = () => {
   const [currentModule, setCurrentModule] = useState('overview');
   const [currentLesson, setCurrentLesson] = useState(0);
-  const [completedLessons, setCompletedLessons] = useState([]);
+  const [completedLessons, setCompletedLessons] = useState(() => {
+    // 从localStorage加载进度
+    try {
+      const saved = localStorage.getItem('overseas-training-progress');
+      return saved ? JSON.parse(saved) : [];
+    } catch (error) {
+      console.error('Failed to load progress from localStorage:', error);
+      return [];
+    }
+  });
   const [showQuiz, setShowQuiz] = useState(false);
   const [quizAnswers, setQuizAnswers] = useState({});
   const [quizScore, setQuizScore] = useState(null);
+  const [showCertificate, setShowCertificate] = useState(false);
 
   // 培训模块数据
   const trainingModules = [
@@ -111,6 +121,32 @@ const OverseasTraining = () => {
             '移动端适配',
             'SEO优化基础'
           ]
+        },
+        {
+          id: 'quiz2',
+          title: '平台搭建测验',
+          duration: '5分钟',
+          type: 'quiz',
+          questions: [
+            {
+              id: 1,
+              question: '选择电商平台时最重要的考虑因素是什么？',
+              options: ['平台知名度', '产品类型匹配度', '注册费用', '界面美观度'],
+              correct: 1
+            },
+            {
+              id: 2,
+              question: '店铺认证通常需要多长时间？',
+              options: ['1-3个工作日', '3-7个工作日', '7-14个工作日', '即时完成'],
+              correct: 1
+            },
+            {
+              id: 3,
+              question: '以下哪项不是店铺优化的关键要素？',
+              options: ['页面加载速度', '移动端适配', '店铺注册时间', 'SEO优化'],
+              correct: 2
+            }
+          ]
         }
       ]
     },
@@ -172,6 +208,38 @@ const OverseasTraining = () => {
             '库存周转优化',
             '滞销品处理'
           ]
+        },
+        {
+          id: 'quiz3',
+          title: '产品管理测验',
+          duration: '5分钟',
+          type: 'quiz',
+          questions: [
+            {
+              id: 1,
+              question: '产品选择的首要标准是什么？',
+              options: ['价格最低', '市场需求大', '自己喜欢', '供应商推荐'],
+              correct: 1
+            },
+            {
+              id: 2,
+              question: '商品标题优化的核心是什么？',
+              options: ['字数越多越好', '使用相关关键词', '全部大写', '添加表情符号'],
+              correct: 1
+            },
+            {
+              id: 3,
+              question: '理想的库存周转率是？',
+              options: ['越低越好', '越高越好', '保持适中', '不重要'],
+              correct: 2
+            },
+            {
+              id: 4,
+              question: '产品图片优化最重要的是？',
+              options: ['图片数量多', '高清晰度和多角度展示', '加水印', '统一滤镜'],
+              correct: 1
+            }
+          ]
         }
       ]
     },
@@ -231,6 +299,38 @@ const OverseasTraining = () => {
             '购物车放弃挽回',
             '客户反馈收集',
             '节日促销邮件'
+          ]
+        },
+        {
+          id: 'quiz4',
+          title: '营销推广测验',
+          duration: '5分钟',
+          type: 'quiz',
+          questions: [
+            {
+              id: 1,
+              question: '社媒营销最有效的平台组合是？',
+              options: ['只用一个平台', '根据目标受众选择多平台', '所有平台都用', '不需要社媒'],
+              correct: 1
+            },
+            {
+              id: 2,
+              question: 'SEO优化的核心目标是？',
+              options: ['网站美观', '提高搜索排名', '增加页面数量', '减少加载时间'],
+              correct: 1
+            },
+            {
+              id: 3,
+              question: '邮件营销的最佳发送频率是？',
+              options: ['每天发送', '根据客户偏好和内容价值决定', '每月一次', '随机发送'],
+              correct: 1
+            },
+            {
+              id: 4,
+              question: '付费广告投放前最重要的是？',
+              options: ['预算越多越好', '明确目标受众和转化目标', '选择最贵的位置', '复制竞争对手'],
+              correct: 1
+            }
           ]
         }
       ]
@@ -292,6 +392,38 @@ const OverseasTraining = () => {
             '客户反馈收集',
             '售后服务跟进'
           ]
+        },
+        {
+          id: 'quiz5',
+          title: '订单履约测验',
+          duration: '5分钟',
+          type: 'quiz',
+          questions: [
+            {
+              id: 1,
+              question: '订单处理的首要原则是什么？',
+              options: ['成本最低', '速度最快', '及时准确', '批量处理'],
+              correct: 2
+            },
+            {
+              id: 2,
+              question: '选择物流方案时最应考虑的因素是？',
+              options: ['价格', '时效与成本的平衡', '包装美观', '物流公司规模'],
+              correct: 1
+            },
+            {
+              id: 3,
+              question: '客户服务响应时间的行业标准是？',
+              options: ['1小时内', '24小时内', '48小时内', '一周内'],
+              correct: 1
+            },
+            {
+              id: 4,
+              question: '处理客户投诉的最佳方式是？',
+              options: ['忽略', '快速响应并提供解决方案', '推卸责任', '拖延处理'],
+              correct: 1
+            }
+          ]
         }
       ]
     },
@@ -349,14 +481,63 @@ const OverseasTraining = () => {
             '合作伙伴发展',
             '技术创新应用'
           ]
+        },
+        {
+          id: 'quiz6',
+          title: '数据分析测验',
+          duration: '5分钟',
+          type: 'quiz',
+          questions: [
+            {
+              id: 1,
+              question: '最重要的电商业务指标是？',
+              options: ['访客数', '转化率', '综合分析多个指标', '页面浏览量'],
+              correct: 2
+            },
+            {
+              id: 2,
+              question: '客户生命周期价值(LTV)的意义是？',
+              options: ['首次购买金额', '客户长期价值预测', '客户数量', '平均订单价值'],
+              correct: 1
+            },
+            {
+              id: 3,
+              question: '数据分析的最终目的是？',
+              options: ['生成报表', '指导业务决策和优化', '满足老板要求', '展示给投资人'],
+              correct: 1
+            },
+            {
+              id: 4,
+              question: '业务增长的可持续策略是？',
+              options: ['快速扩张', '数据驱动的持续优化', '削减成本', '增加广告投入'],
+              correct: 1
+            }
+          ]
         }
       ]
     }
   ];
 
+  // 保存进度到localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem('overseas-training-progress', JSON.stringify(completedLessons));
+    } catch (error) {
+      console.error('Failed to save progress to localStorage:', error);
+    }
+  }, [completedLessons]);
+
   const handleLessonComplete = (moduleId, lessonId) => {
     const completedKey = `${moduleId}-${lessonId}`;
-    setCompletedLessons(prev => [...prev, completedKey]);
+    if (!completedLessons.includes(completedKey)) {
+      setCompletedLessons(prev => [...prev, completedKey]);
+
+      // 检查是否完成所有课程
+      const totalLessons = trainingModules.reduce((acc, module) => acc + module.lessons.length, 0);
+      if (completedLessons.length + 1 >= totalLessons) {
+        setTimeout(() => setShowCertificate(true), 1000);
+      }
+    }
   };
 
   const handleQuizSubmit = (answers) => {
@@ -379,83 +560,133 @@ const OverseasTraining = () => {
   };
 
   const renderOverview = () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        animation: 'fadeIn 0.6s ease-out'
+      }}>
         <div>
           <h2 style={{
-            fontSize: '32px',
-            fontWeight: 'bold',
-            color: '#111827',
-            marginBottom: '8px',
-            margin: '0 0 8px 0'
+            fontSize: '42px',
+            fontWeight: '800',
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+            marginBottom: '12px',
+            margin: '0 0 12px 0',
+            letterSpacing: '-0.02em'
           }}>🎓 出海电商培训</h2>
-          <p style={{ color: '#6b7280', margin: '0' }}>手把手教会初学者如何进行出海电商开店</p>
+          <p style={{
+            color: '#64748b',
+            margin: '0',
+            fontSize: '18px',
+            fontWeight: '500'
+          }}>手把手教会初学者如何进行出海电商开店</p>
         </div>
       </div>
 
       {/* 学习进度 */}
-      <div style={{
-        backgroundColor: '#ffffff',
-        borderRadius: '12px',
-        padding: '24px',
-        border: '1px solid #e5e7eb',
-        boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)'
+      <div className="glass-effect" style={{
+        borderRadius: '20px',
+        padding: '32px',
+        boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+        animation: 'fadeIn 0.7s ease-out'
       }}>
         <h3 style={{
-          fontSize: '18px',
-          fontWeight: '600',
-          color: '#111827',
-          marginBottom: '16px',
-          margin: '0 0 16px 0'
-        }}>📈 学习进度</h3>
-        
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          {trainingModules.map((module) => {
-            const moduleCompleted = module.lessons.filter(lesson => 
+          fontSize: '22px',
+          fontWeight: '700',
+          color: '#1e293b',
+          marginBottom: '24px',
+          margin: '0 0 24px 0',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px'
+        }}>
+          <span>📈</span>
+          <span>学习进度</span>
+        </h3>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          {trainingModules.map((module, index) => {
+            const moduleCompleted = module.lessons.filter(lesson =>
               completedLessons.includes(`${module.id}-${lesson.id}`)
             ).length;
             const progress = (moduleCompleted / module.lessons.length) * 100;
-            
+            const gradients = ['gradient-blue', 'gradient-green', 'gradient-purple', 'gradient-orange', 'gradient-teal', 'gradient-pink'];
+            const gradientClass = gradients[index % gradients.length];
+
             return (
               <div key={module.id} style={{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                padding: '12px',
-                backgroundColor: '#f8fafc',
-                borderRadius: '8px',
-                border: '1px solid #e5e7eb'
+                padding: '18px 20px',
+                backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                borderRadius: '12px',
+                border: '1px solid rgba(226, 232, 240, 0.8)',
+                boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.05)',
+                transition: 'all 0.2s ease',
+                cursor: 'pointer',
+                animation: `slideIn ${0.4 + index * 0.1}s ease-out`
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateX(4px)';
+                e.currentTarget.style.boxShadow = '0 4px 12px 0 rgba(0, 0, 0, 0.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateX(0)';
+                e.currentTarget.style.boxShadow = '0 1px 3px 0 rgba(0, 0, 0, 0.05)';
               }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <span style={{ fontSize: '24px' }}>{module.icon}</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                  <div style={{
+                    width: '48px',
+                    height: '48px',
+                    borderRadius: '12px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '24px',
+                    background: progress === 100
+                      ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
+                      : 'linear-gradient(135deg, #e0e7ff 0%, #f3f4f6 100%)'
+                  }}>
+                    {module.icon}
+                  </div>
                   <div>
-                    <div style={{ fontSize: '14px', fontWeight: '500', color: '#111827' }}>
+                    <div style={{ fontSize: '15px', fontWeight: '600', color: '#1e293b', marginBottom: '4px' }}>
                       {module.title}
                     </div>
-                    <div style={{ fontSize: '12px', color: '#6b7280' }}>
+                    <div style={{ fontSize: '13px', color: '#64748b' }}>
                       {moduleCompleted}/{module.lessons.length} 课程完成
                     </div>
                   </div>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                   <div style={{
-                    width: '100px',
-                    height: '8px',
-                    backgroundColor: '#e5e7eb',
-                    borderRadius: '4px',
-                    overflow: 'hidden'
+                    width: '120px',
+                    height: '10px',
+                    backgroundColor: '#e2e8f0',
+                    borderRadius: '10px',
+                    overflow: 'hidden',
+                    boxShadow: 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)'
                   }}>
-                    <div style={{
+                    <div className={`progress-bar ${progress === 100 ? '' : gradientClass}`} style={{
                       width: `${progress}%`,
                       height: '100%',
-                      backgroundColor: progress === 100 ? '#10b981' : '#3b82f6',
-                      transition: 'width 0.3s ease'
+                      background: progress === 100
+                        ? 'linear-gradient(90deg, #10b981 0%, #059669 100%)'
+                        : undefined,
+                      borderRadius: '10px'
                     }} />
                   </div>
                   <span style={{
-                    fontSize: '12px',
-                    color: '#6b7280',
-                    minWidth: '40px'
+                    fontSize: '14px',
+                    color: '#475569',
+                    minWidth: '45px',
+                    fontWeight: '600'
                   }}>
                     {Math.round(progress)}%
                   </span>
@@ -469,82 +700,123 @@ const OverseasTraining = () => {
       {/* 培训模块 */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-        gap: '20px'
+        gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+        gap: '24px'
       }}>
-        {trainingModules.map((module) => (
-          <div
-            key={module.id}
-            onClick={() => setCurrentModule(module.id)}
-            style={{
-              backgroundColor: '#ffffff',
-              borderRadius: '12px',
-              padding: '24px',
-              border: '1px solid #e5e7eb',
-              boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = '#3b82f6';
-              e.currentTarget.style.boxShadow = '0 4px 12px 0 rgba(59, 130, 246, 0.15)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = '#e5e7eb';
-              e.currentTarget.style.boxShadow = '0 1px 3px 0 rgba(0, 0, 0, 0.1)';
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px' }}>
-              <div style={{
-                width: '48px',
-                height: '48px',
-                backgroundColor: '#eff6ff',
-                borderRadius: '12px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '24px'
-              }}>
-                {module.icon}
-              </div>
-              <div>
-                <h3 style={{
-                  fontSize: '18px',
-                  fontWeight: '600',
-                  color: '#111827',
-                  marginBottom: '4px',
-                  margin: '0 0 4px 0'
-                }}>{module.title}</h3>
-                <p style={{
-                  fontSize: '14px',
-                  color: '#6b7280',
-                  margin: '0'
-                }}>{module.description}</p>
-              </div>
-            </div>
-            
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <span style={{
-                fontSize: '12px',
-                color: '#6b7280'
-              }}>
-                {module.lessons.length} 个课程
-              </span>
-              <button style={{
-                padding: '6px 12px',
-                backgroundColor: '#3b82f6',
-                color: '#ffffff',
-                border: 'none',
-                borderRadius: '6px',
+        {trainingModules.map((module, index) => {
+          const gradients = [
+            'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            'linear-gradient(135deg, #5ee7df 0%, #b490ca 100%)',
+            'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
+            'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+            'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+            'linear-gradient(135deg, #fa709a 0%, #fee140 100%)'
+          ];
+          const gradient = gradients[index % gradients.length];
+
+          return (
+            <div
+              key={module.id}
+              onClick={() => setCurrentModule(module.id)}
+              className="training-card"
+              style={{
+                position: 'relative',
+                overflow: 'hidden',
+                background: 'rgba(255, 255, 255, 0.95)',
+                backdropFilter: 'blur(10px)',
+                borderRadius: '20px',
+                padding: '0',
+                border: '1px solid rgba(255, 255, 255, 0.18)',
+                boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.15)',
                 cursor: 'pointer',
-                fontSize: '12px',
-                fontWeight: '500'
-              }}>
-                开始学习
-              </button>
+                animationDelay: `${index * 0.1}s`
+              }}
+            >
+              <div style={{
+                height: '8px',
+                background: gradient,
+                width: '100%'
+              }} />
+
+              <div style={{ padding: '28px' }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px', marginBottom: '20px' }}>
+                  <div style={{
+                    width: '56px',
+                    height: '56px',
+                    background: gradient,
+                    borderRadius: '16px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '28px',
+                    boxShadow: '0 4px 14px 0 rgba(0, 0, 0, 0.1)',
+                    flexShrink: 0
+                  }}>
+                    {module.icon}
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <h3 style={{
+                      fontSize: '20px',
+                      fontWeight: '700',
+                      color: '#1e293b',
+                      marginBottom: '8px',
+                      margin: '0 0 8px 0',
+                      letterSpacing: '-0.01em'
+                    }}>{module.title}</h3>
+                    <p style={{
+                      fontSize: '14px',
+                      color: '#64748b',
+                      margin: '0',
+                      lineHeight: '1.5'
+                    }}>{module.description}</p>
+                  </div>
+                </div>
+
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  paddingTop: '16px',
+                  borderTop: '1px solid #e2e8f0'
+                }}>
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    fontSize: '13px',
+                    color: '#64748b',
+                    fontWeight: '500'
+                  }}>
+                    <span>📚</span>
+                    <span>{module.lessons.length} 个课程</span>
+                  </div>
+                  <button style={{
+                    padding: '10px 20px',
+                    background: gradient,
+                    color: '#ffffff',
+                    border: 'none',
+                    borderRadius: '10px',
+                    cursor: 'pointer',
+                    fontSize: '13px',
+                    fontWeight: '600',
+                    boxShadow: '0 4px 14px 0 rgba(0, 0, 0, 0.1)',
+                    transition: 'all 0.2s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                    e.currentTarget.style.boxShadow = '0 6px 20px 0 rgba(0, 0, 0, 0.15)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 4px 14px 0 rgba(0, 0, 0, 0.1)';
+                  }}>
+                    开始学习
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
@@ -997,9 +1269,9 @@ const OverseasTraining = () => {
               color: '#111827',
               marginBottom: '12px',
               margin: '0 0 12px 0'
-            }}>🎯 营销策略</h4>
+            }}>🎯 {lesson.strategies ? '营销策略' : '增长策略'}</h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              {lesson.strategies.map((strategy, index) => (
+              {lesson.strategies ? lesson.strategies.map((strategy, index) => (
                 <div key={index} style={{
                   padding: '16px',
                   backgroundColor: '#f8fafc',
@@ -1012,24 +1284,152 @@ const OverseasTraining = () => {
                     color: '#111827',
                     marginBottom: '8px',
                     margin: '0 0 8px 0'
-                  }}>{strategy.name}</h5>
-                  <p style={{
+                  }}>{typeof strategy === 'string' ? strategy : strategy.name}</h5>
+                  {typeof strategy === 'object' && strategy.description && (
+                    <>
+                      <p style={{
+                        fontSize: '14px',
+                        color: '#374151',
+                        marginBottom: '12px',
+                        margin: '0 0 12px 0'
+                      }}>{strategy.description}</p>
+                      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                        {(strategy.platforms || strategy.types || []).map((item, idx) => (
+                          <span key={idx} style={{
+                            padding: '4px 8px',
+                            fontSize: '12px',
+                            backgroundColor: '#eff6ff',
+                            color: '#1e40af',
+                            borderRadius: '4px'
+                          }}>
+                            {item}
+                          </span>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
+              )) : null}
+            </div>
+          </div>
+        );
+
+      case 'workflow':
+        return (
+          <div>
+            <h4 style={{
+              fontSize: '16px',
+              fontWeight: '600',
+              color: '#111827',
+              marginBottom: '12px',
+              margin: '0 0 12px 0'
+            }}>🔄 工作流程</h4>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {lesson.workflow && lesson.workflow.map((step, index) => (
+                <div key={index} style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  padding: '16px',
+                  backgroundColor: '#f8fafc',
+                  borderRadius: '8px',
+                  border: '1px solid #e5e7eb',
+                  position: 'relative'
+                }}>
+                  <div style={{
+                    width: '32px',
+                    height: '32px',
+                    backgroundColor: '#10b981',
+                    color: '#ffffff',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    flexShrink: 0
+                  }}>
+                    {index + 1}
+                  </div>
+                  <div style={{
+                    flex: 1,
                     fontSize: '14px',
                     color: '#374151',
+                    fontWeight: '500'
+                  }}>
+                    {step}
+                  </div>
+                  {index < lesson.workflow.length - 1 && (
+                    <div style={{
+                      position: 'absolute',
+                      left: '28px',
+                      bottom: '-12px',
+                      width: '2px',
+                      height: '12px',
+                      backgroundColor: '#d1d5db'
+                    }} />
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+
+      case 'logistics':
+        return (
+          <div>
+            <h4 style={{
+              fontSize: '16px',
+              fontWeight: '600',
+              color: '#111827',
+              marginBottom: '12px',
+              margin: '0 0 12px 0'
+            }}>🚚 物流方案对比</h4>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
+              {lesson.options && lesson.options.map((option, index) => (
+                <div key={index} style={{
+                  padding: '16px',
+                  backgroundColor: '#f8fafc',
+                  borderRadius: '8px',
+                  border: '2px solid #e5e7eb'
+                }}>
+                  <h5 style={{
+                    fontSize: '16px',
+                    fontWeight: '600',
+                    color: '#111827',
                     marginBottom: '12px',
                     margin: '0 0 12px 0'
-                  }}>{strategy.description}</p>
-                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                    {(strategy.platforms || strategy.types || []).map((item, idx) => (
-                      <span key={idx} style={{
-                        padding: '4px 8px',
-                        fontSize: '12px',
-                        backgroundColor: '#eff6ff',
-                        color: '#1e40af',
-                        borderRadius: '4px'
-                      }}>
-                        {item}
-                      </span>
+                  }}>{option.name}</h5>
+                  <div style={{ marginBottom: '12px' }}>
+                    <div style={{
+                      fontSize: '12px',
+                      fontWeight: '600',
+                      color: '#10b981',
+                      marginBottom: '6px'
+                    }}>✓ 优势</div>
+                    {option.advantages.map((adv, idx) => (
+                      <div key={idx} style={{
+                        fontSize: '13px',
+                        color: '#374151',
+                        paddingLeft: '12px',
+                        marginBottom: '4px'
+                      }}>• {adv}</div>
+                    ))}
+                  </div>
+                  <div>
+                    <div style={{
+                      fontSize: '12px',
+                      fontWeight: '600',
+                      color: '#ef4444',
+                      marginBottom: '6px'
+                    }}>✗ 劣势</div>
+                    {option.disadvantages.map((dis, idx) => (
+                      <div key={idx} style={{
+                        fontSize: '13px',
+                        color: '#374151',
+                        paddingLeft: '12px',
+                        marginBottom: '4px'
+                      }}>• {dis}</div>
                     ))}
                   </div>
                 </div>
@@ -1037,6 +1437,233 @@ const OverseasTraining = () => {
             </div>
           </div>
         );
+
+      case 'service':
+        return (
+          <div>
+            <h4 style={{
+              fontSize: '16px',
+              fontWeight: '600',
+              color: '#111827',
+              marginBottom: '12px',
+              margin: '0 0 12px 0'
+            }}>🎯 最佳实践</h4>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {lesson.bestPractices && lesson.bestPractices.map((practice, index) => (
+                <div key={index} style={{
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: '12px',
+                  padding: '16px',
+                  backgroundColor: '#ecfdf5',
+                  borderRadius: '8px',
+                  border: '1px solid #10b981'
+                }}>
+                  <span style={{
+                    fontSize: '20px',
+                    flexShrink: 0
+                  }}>✓</span>
+                  <div style={{
+                    fontSize: '14px',
+                    color: '#065f46',
+                    fontWeight: '500'
+                  }}>
+                    {practice}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+
+      case 'analytics':
+        return (
+          <div>
+            <h4 style={{
+              fontSize: '16px',
+              fontWeight: '600',
+              color: '#111827',
+              marginBottom: '12px',
+              margin: '0 0 12px 0'
+            }}>📊 关键指标</h4>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              {lesson.metrics && lesson.metrics.map((category, index) => (
+                <div key={index} style={{
+                  padding: '16px',
+                  backgroundColor: '#f8fafc',
+                  borderRadius: '8px',
+                  border: '1px solid #e5e7eb'
+                }}>
+                  <h5 style={{
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    color: '#111827',
+                    marginBottom: '12px',
+                    margin: '0 0 12px 0'
+                  }}>{category.name}</h5>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: '8px' }}>
+                    {category.metrics.map((metric, idx) => (
+                      <div key={idx} style={{
+                        padding: '8px 12px',
+                        backgroundColor: '#ffffff',
+                        borderRadius: '6px',
+                        border: '1px solid #d1d5db',
+                        fontSize: '13px',
+                        color: '#374151',
+                        textAlign: 'center'
+                      }}>
+                        {metric}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+
+      case 'optimization':
+        return (
+          <div>
+            <h4 style={{
+              fontSize: '16px',
+              fontWeight: '600',
+              color: '#111827',
+              marginBottom: '12px',
+              margin: '0 0 12px 0'
+            }}>⚡ 优化领域</h4>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
+              {lesson.optimizationAreas && lesson.optimizationAreas.map((area, index) => (
+                <div key={index} style={{
+                  padding: '16px',
+                  backgroundColor: '#fef3c7',
+                  borderRadius: '8px',
+                  border: '2px solid #f59e0b',
+                  textAlign: 'center',
+                  fontSize: '14px',
+                  color: '#92400e',
+                  fontWeight: '500'
+                }}>
+                  {area}
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+
+      case 'automation':
+        return (
+          <div>
+            <h4 style={{
+              fontSize: '16px',
+              fontWeight: '600',
+              color: '#111827',
+              marginBottom: '12px',
+              margin: '0 0 12px 0'
+            }}>🤖 自动化活动</h4>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {lesson.campaigns && lesson.campaigns.map((campaign, index) => (
+                <div key={index} style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  padding: '14px',
+                  backgroundColor: '#eff6ff',
+                  borderRadius: '8px',
+                  border: '1px solid #3b82f6'
+                }}>
+                  <span style={{
+                    fontSize: '20px',
+                    flexShrink: 0
+                  }}>📧</span>
+                  <div style={{
+                    fontSize: '14px',
+                    color: '#1e40af',
+                    fontWeight: '500'
+                  }}>
+                    {campaign}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+
+      case 'technical':
+        return (
+          <div>
+            <h4 style={{
+              fontSize: '16px',
+              fontWeight: '600',
+              color: '#111827',
+              marginBottom: '12px',
+              margin: '0 0 12px 0'
+            }}>🔧 技术要点</h4>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              {lesson.techniques && lesson.techniques.map((technique, index) => (
+                <div key={index} style={{
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: '10px',
+                  padding: '12px',
+                  backgroundColor: '#f8fafc',
+                  borderRadius: '6px',
+                  border: '1px solid #e5e7eb'
+                }}>
+                  <span style={{
+                    fontSize: '18px',
+                    flexShrink: 0
+                  }}>▸</span>
+                  <div style={{
+                    fontSize: '14px',
+                    color: '#374151',
+                    lineHeight: '1.5'
+                  }}>
+                    {technique}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+
+      case 'guide':
+      case 'interactive':
+      case 'analysis':
+      case 'system':
+        return lesson.keyPoints ? (
+          <div>
+            <h4 style={{
+              fontSize: '16px',
+              fontWeight: '600',
+              color: '#111827',
+              marginBottom: '12px',
+              margin: '0 0 12px 0'
+            }}>📝 关键要点</h4>
+            <ul style={{
+              listStyle: 'none',
+              padding: 0,
+              margin: 0
+            }}>
+              {lesson.keyPoints.map((point, index) => (
+                <li key={index} style={{
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: '8px',
+                  padding: '8px 0',
+                  fontSize: '14px',
+                  color: '#374151'
+                }}>
+                  <span style={{
+                    color: '#3b82f6',
+                    fontWeight: 'bold'
+                  }}>•</span>
+                  {point}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null;
 
       default:
         return lesson.keyPoints ? (
@@ -1323,6 +1950,202 @@ const OverseasTraining = () => {
     );
   };
 
+  const renderCertificate = () => {
+    if (!showCertificate) return null;
+
+    const currentDate = new Date().toLocaleDateString('zh-CN', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+
+    return (
+      <div style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 100,
+        padding: '16px',
+        animation: 'fadeIn 0.5s ease-out'
+      }}>
+        <div style={{
+          backgroundColor: '#ffffff',
+          borderRadius: '20px',
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+          padding: '48px',
+          width: '100%',
+          maxWidth: '700px',
+          textAlign: 'center',
+          position: 'relative',
+          border: '8px solid',
+          borderImage: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%) 1',
+          animation: 'fadeIn 0.6s ease-out'
+        }}>
+          <div style={{
+            fontSize: '48px',
+            marginBottom: '20px',
+            animation: 'pulse 2s infinite'
+          }}>🎓</div>
+
+          <h2 style={{
+            fontSize: '36px',
+            fontWeight: '800',
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+            marginBottom: '12px',
+            margin: '0 0 12px 0',
+            letterSpacing: '-0.02em'
+          }}>完成证书</h2>
+
+          <p style={{
+            fontSize: '18px',
+            color: '#64748b',
+            marginBottom: '32px',
+            margin: '0 0 32px 0'
+          }}>恭喜你完成所有培训课程！</p>
+
+          <div style={{
+            padding: '32px',
+            backgroundColor: '#f8fafc',
+            borderRadius: '12px',
+            marginBottom: '32px'
+          }}>
+            <div style={{
+              fontSize: '16px',
+              color: '#475569',
+              marginBottom: '16px',
+              lineHeight: '1.8'
+            }}>
+              兹证明
+            </div>
+            <div style={{
+              fontSize: '28px',
+              fontWeight: '700',
+              color: '#1e293b',
+              marginBottom: '16px',
+              margin: '0 0 16px 0'
+            }}>
+              学员
+            </div>
+            <div style={{
+              fontSize: '16px',
+              color: '#475569',
+              lineHeight: '1.8',
+              marginBottom: '20px'
+            }}>
+              已成功完成
+              <br />
+              <strong style={{ color: '#1e293b', fontSize: '18px' }}>出海电商培训全部课程</strong>
+            </div>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, 1fr)',
+              gap: '12px',
+              marginTop: '24px'
+            }}>
+              {trainingModules.map((module, index) => (
+                <div key={module.id} style={{
+                  padding: '12px',
+                  backgroundColor: '#ffffff',
+                  borderRadius: '8px',
+                  border: '1px solid #e2e8f0'
+                }}>
+                  <div style={{ fontSize: '24px', marginBottom: '4px' }}>{module.icon}</div>
+                  <div style={{
+                    fontSize: '12px',
+                    color: '#64748b',
+                    fontWeight: '500'
+                  }}>
+                    {module.title}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div style={{
+            fontSize: '14px',
+            color: '#94a3b8',
+            marginBottom: '24px'
+          }}>
+            颁发日期: {currentDate}
+          </div>
+
+          <div style={{
+            display: 'flex',
+            gap: '12px',
+            justifyContent: 'center'
+          }}>
+            <button
+              onClick={() => setShowCertificate(false)}
+              style={{
+                padding: '14px 32px',
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                color: '#ffffff',
+                border: 'none',
+                borderRadius: '12px',
+                cursor: 'pointer',
+                fontSize: '16px',
+                fontWeight: '600',
+                boxShadow: '0 4px 14px 0 rgba(102, 126, 234, 0.4)',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 6px 20px 0 rgba(102, 126, 234, 0.6)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 4px 14px 0 rgba(102, 126, 234, 0.4)';
+              }}
+            >
+              太好了！
+            </button>
+            <button
+              onClick={() => {
+                // 重置进度
+                if (window.confirm('确定要重置学习进度吗？')) {
+                  setCompletedLessons([]);
+                  setShowCertificate(false);
+                  setCurrentModule('overview');
+                }
+              }}
+              style={{
+                padding: '14px 32px',
+                backgroundColor: '#ffffff',
+                color: '#64748b',
+                border: '2px solid #e2e8f0',
+                borderRadius: '12px',
+                cursor: 'pointer',
+                fontSize: '16px',
+                fontWeight: '600',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = '#cbd5e1';
+                e.currentTarget.style.color = '#475569';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = '#e2e8f0';
+                e.currentTarget.style.color = '#64748b';
+              }}
+            >
+              重新学习
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <>
       <style>
@@ -1331,12 +2154,104 @@ const OverseasTraining = () => {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
           }
+
+          @keyframes fadeIn {
+            from {
+              opacity: 0;
+              transform: translateY(20px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+
+          @keyframes slideIn {
+            from {
+              opacity: 0;
+              transform: translateX(-20px);
+            }
+            to {
+              opacity: 1;
+              transform: translateX(0);
+            }
+          }
+
+          @keyframes pulse {
+            0%, 100% {
+              opacity: 1;
+            }
+            50% {
+              opacity: 0.8;
+            }
+          }
+
+          @keyframes shimmer {
+            0% {
+              background-position: -1000px 0;
+            }
+            100% {
+              background-position: 1000px 0;
+            }
+          }
+
+          .training-card {
+            animation: fadeIn 0.5s ease-out;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          }
+
+          .training-card:hover {
+            transform: translateY(-8px);
+          }
+
+          .lesson-item {
+            animation: slideIn 0.4s ease-out;
+            transition: all 0.2s ease;
+          }
+
+          .progress-bar {
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+          }
+
+          .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          }
+
+          .gradient-blue {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          }
+
+          .gradient-green {
+            background: linear-gradient(135deg, #5ee7df 0%, #b490ca 100%);
+          }
+
+          .gradient-purple {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+          }
+
+          .gradient-orange {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+          }
+
+          .gradient-teal {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+          }
+
+          .gradient-pink {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+          }
+
+          .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+          }
         `}
       </style>
-      
+
       <div style={{
         minHeight: '100vh',
-        backgroundColor: '#f8fafc',
+        background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
         padding: '32px'
       }}>
         <div style={{
@@ -1348,9 +2263,12 @@ const OverseasTraining = () => {
           
           {/* 测验模态框 */}
           {showQuiz && renderQuizModal()}
-          
+
           {/* 测验结果 */}
           {quizScore !== null && renderQuizResult()}
+
+          {/* 完成证书 */}
+          {renderCertificate()}
         </div>
       </div>
     </>
